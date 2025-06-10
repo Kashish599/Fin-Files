@@ -1,0 +1,42 @@
+import pandas as pd
+from openchart import NSEData
+import datetime as dt
+import matplotlib.pyplot as plt
+import numpy as np
+enddate=dt.datetime.now()
+startdate=enddate-dt.timedelta(days=100)
+nse=NSEData()
+nse.download()
+stock_prices=nse.historical(symbol="INFY",start=startdate,end=enddate)
+EMA12=stock_prices["Close"].ewm(span=12,adjust=False).mean()
+EMA26=stock_prices["Close"].ewm(span=26,adjust=False).mean()
+MACD=EMA12-EMA26
+data=pd.DataFrame()
+data["Close"]=stock_prices["Close"]
+data["12dayEMA"]=EMA12
+data["26dayEMA"]=EMA26
+data["MACD"]=MACD
+EMA9=data["MACD"].ewm(span=9,adjust=False).mean()
+data["9dayEMA"]=EMA9
+data.dropna(inplace=True)
+def statement(i):
+    if(i["MACD"]<0 or i["MACD"]<i["9dayEMA"]):
+        print("Market is bearish")
+    elif(i["MACD"]>0 or i["MACD"]>i["9dayEMA"]):
+        print("Market is bullish")
+data.apply(statement,axis=1)
+
+plt.plot(data["MACD"],color="green")
+plt.plot(data["9dayEMA"],color="blue")
+plt.xticks(rotation=45)
+plt.savefig("myplot.png")
+plt.show()
+# When MACD line is below 9 day EMA it is bearish market
+# When MACD line is above 9 day EMA it is bullish market
+# MACD is negative=12 day EMA<26 day EMA-Bearish trend
+#MACD is positive=12 day EMA> 26 day EMA-Bullish trend
+
+
+
+
+
