@@ -1,0 +1,13 @@
+S0= float(input("Enter correct stock price : "))
+T= int(input("Enter the time period : "))
+d1= float(input("Enter the random var : "))
+#d1 shows the relationship between stock price, risk free rate, volatility, etc.
+import math
+pie=math.pi
+Exp=math.exp(-((d1)**2)/2)
+
+#vega=S0*(T)**2 *N'(d1)
+Vega=S0*(T**0.5)*(1/(2*pie))*Exp
+print(Vega)
+
+#Vega implies for every 1% increase or decrease in volatility option price will change by Vega amount.
