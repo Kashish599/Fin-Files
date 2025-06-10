@@ -1,0 +1,40 @@
+import yfinance as yf
+import pandas as pd
+import numpy as np
+import datetime as dt
+import matplotlib.pyplot as plt
+sign=["GOOGL"]
+enddate=dt.datetime.now()
+startdate=enddate-dt.timedelta(365*3)
+prices=yf.download(sign,start=startdate,end=enddate)
+print(prices)
+df=pd.DataFrame(prices)
+df.columns=df.columns.get_level_values(0)
+df.reset_index(inplace=True,drop=True)
+df.drop(columns=["High","Low","Open","Volume"],inplace=True)
+High=df["Close"].rolling(window=14).max()
+print(High)
+Low=df["Close"].rolling(window=14).min()
+print(Low)
+K=((df["Close"]-High)/(High-Low)*100)
+Kpercent=pd.DataFrame(K)
+print(Kpercent)
+def condition(row):
+    if(row["Close"]>80):
+        print("security oversold")
+    elif(row["Close"]<20):
+        print("security underbought")
+Kpercent.apply(condition,axis=1)
+D= Kpercent["Close"].rolling(window=3).mean()
+print(D)
+Smoothingfactor=D.rolling(window=3).mean()
+print(Smoothingfactor)
+#D is SMA of K line
+#Smoothingfactor/Y is SMA of D line to further eliminate any unnecessary noise.
+plt.plot(K )
+plt.plot(D)
+plt.ylim(-10,100)
+plt.yticks(np.arange(-10,110,10))
+plt.savefig("myplot.png")
+plt.show()
+
