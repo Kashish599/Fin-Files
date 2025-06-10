@@ -12,8 +12,8 @@ info.columns=info.columns.get_level_values(0)
 print(info)
 table=pd.DataFrame()
 def bollinger_bands(i,window,num_std):
-    moving_avg=Data["Close"].rolling(window).mean()
-    moving_stddev=Data["Close"].rolling(window).std()
+    moving_avg=i["Close"].rolling(window).mean()
+    moving_stddev=i["Close"].rolling(window).std()
     upper_limit=moving_avg+(moving_stddev*num_std)
     lower_limit=moving_avg-(moving_stddev*num_std)
     table["Movingavg"]=moving_avg
