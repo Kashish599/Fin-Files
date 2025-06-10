@@ -1,0 +1,28 @@
+from openchart import NSEData
+import datetime as dt
+import pandas as pd
+import matplotlib.pyplot as plt
+nse=NSEData()
+nse.download()
+enddate=dt.datetime.now()
+startdate=enddate - dt.timedelta(days=30)
+
+niftyprices=nse.historical(symbol="NIFTY",exchange="NSE",start=startdate,end=enddate)
+data=pd.DataFrame()
+data["High"]=niftyprices["High"]
+data["Low"]=niftyprices["Low"]
+swing_high=max(data["High"])
+levels=[0.236,0.382,0.5,0.618,0.786]
+#Fibonacci retracement at 23.6% level
+i=0
+while i<5:
+    Fib_point=swing_high-swing_high*levels[i]
+    data["swing_high"]=Fib_point
+    i+=1
+    print(data)
+    plt.plot(data["High"],color="blue")
+    plt.plot(data["swing_high"],color="red")
+
+    plt.xticks(rotation=45)
+    plt.savefig("myplot.png")
+    plt.show()
