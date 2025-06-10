@@ -1,0 +1,35 @@
+import yfinance as yf
+import pandas as pd
+import datetime as dt
+import seaborn as sns
+import matplotlib.pyplot as plt
+ticker=input("Enter the symbol : ")
+exp_dates=yf.Ticker(ticker).options
+i=int(input("Enter the index value : "))
+option_chain= yf.Ticker(ticker).option_chain(exp_dates[i])
+data= option_chain.calls
+data.drop(["contractSymbol","bid","ask","openInterest","inTheMoney","contractSize","currency"],inplace=True,axis=1)
+print(data["strike"].iloc[0])
+values=[]
+for i in range(35):
+    i=i*1.03
+    values.append(i+100)
+data["newdate"]=dt.datetime.now()+dt.timedelta(1)
+data["strikeprice"]=data["strike"].iloc[0]
+data.drop(data.tail(20).index,inplace=True,axis=0)
+data["currentMP"]=values
+data.drop(["lastTradeDate","strike","lastPrice","change","percentChange","volume","impliedVolatility"],inplace=True,axis=1)
+payoff=data["currentMP"]-data["strikeprice"]
+data["payoff"]=payoff
+data.loc[data["payoff"]<0,"payoff"]=0
+Choice=input("Enter long or short : ")
+if Choice=="long":
+    result=data["payoff"]-2.45
+elif Choice=="short":
+    result=data["payoff"]+2.45
+data["result"]=result
+print(data)
+sns.set_style("darkgrid")
+sns.lineplot(data,x=data["newdate"],y=data["result"],color="red")
+plt.savefig("options.png")
+plt.show()
