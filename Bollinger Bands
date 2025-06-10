@@ -1,0 +1,38 @@
+import pandas as pd
+import yfinance as yf
+import datetime as dt
+import mplfinance as mpf
+import matplotlib.pyplot as plt
+ticker=input("Enter the ticker symbol: ")
+enddate=dt.datetime.now()
+startdate=enddate-dt.timedelta(days=int(input("Enter the number of days : ")))
+Data=yf.download(ticker,start=startdate,end=enddate)
+info=pd.DataFrame(Data)
+info.columns=info.columns.get_level_values(0)
+print(info)
+table=pd.DataFrame()
+def bollinger_bands(i,window,num_std):
+    moving_avg=Data["Close"].rolling(window).mean()
+    moving_stddev=Data["Close"].rolling(window).std()
+    upper_limit=moving_avg+(moving_stddev*num_std)
+    lower_limit=moving_avg-(moving_stddev*num_std)
+    table["Movingavg"]=moving_avg
+    table["Upperlimit"]=upper_limit
+    table["Lowerlimit"]=lower_limit
+    table.dropna(inplace=True)
+    return table
+print(bollinger_bands(info,20,2))
+plt.plot(table["Upperlimit"],color="red")
+plt.plot(table["Movingavg"],color="blue")
+plt.plot(table["Lowerlimit"],color="green")
+if dt.datetime.now():
+    amount=info["Close"].iloc[-1]
+plt.text(dt.datetime.now(),amount,str(amount))
+
+plt.xticks(rotation=45)
+plt.savefig("bollinger_bands.png")
+plt.show()
+#If current price is above the upper limit, it is considered overbought.
+#If current price is below the lower limit, it is considered oversold.
+#Also, as gap between bands are wider, it indicates more volatility.
+#Also, as gap between bands narrows, it indicates less volatility
