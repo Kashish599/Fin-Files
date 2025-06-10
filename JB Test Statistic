@@ -1,0 +1,21 @@
+import pandas as pd
+import numpy as np
+from scipy.stats import skew,kurtosis,chi2
+import matplotlib.pyplot as plt
+data={"name" :["A","B","C","D","E","F"],"marks" :[74,52,85,96,23,45]}
+df=pd.DataFrame(data)
+print(df)
+skewness= skew(data["marks"])
+print(skewness)
+kurtosis=kurtosis(data["marks"])
+print(kurtosis)
+JarqueBeraTS=((len(data["marks"])/6)*(skewness**2+((kurtosis-3)**2/4)))
+print(JarqueBeraTS)
+criticalvalue=chi2.ppf(0.05,5)
+print(criticalvalue)
+#NullHypo=Data is normally distributed
+#AlternateHypo=Data is not normally distributed
+if(JarqueBeraTS>criticalvalue):
+    print("Reject null hypothesis and therefore data is not normally distributed")
+else:
+    print("Accept null hypothesis and therefore data is normally distributed")
