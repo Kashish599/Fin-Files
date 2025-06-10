@@ -1,0 +1,29 @@
+import numpy as np
+import pandas as pd
+import datetime as dt
+import yfinance as yf
+from scipy.stats import norm
+import matplotlib.pyplot as plt
+enddate=dt.datetime.now()
+startdate=enddate-dt.timedelta(365*15)
+tickers=["SPY","QQQ","BND","GLD","VTI"]
+close_price=pd.DataFrame()
+for ticker in tickers:
+    info=yf.download(ticker,start=startdate,end=enddate)
+    close_price[ticker]=info["Close"]
+log_returns=np.log(close_price/close_price.shift(1))
+portfolio_value=int(input("enter desired PV : "))
+weights=np.array([1/len(tickers)]*len(tickers))
+
+cov =log_returns.cov()
+portfolio_std_dev=np.sqrt(weights.T @ cov @ weights)
+confidence_interval=[0.9,0.95,0.99]
+for cl in confidence_interval:
+    zscore=norm.ppf(cl)
+    var=portfolio_value*portfolio_std_dev*zscore*np.sqrt(5/252)
+    print(f" Var at {cl*100}% confidence_interval : {var: .2f}")
+    
+
+
+
+
