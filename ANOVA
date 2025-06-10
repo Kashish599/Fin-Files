@@ -1,0 +1,33 @@
+G1=[3,2,1]
+G2=[10,9,8]
+G3=[7,4,7]
+
+import statistics
+A= (statistics.mean(G1 and G2 and G3))  #Mean of whole group
+B= (statistics.mean(G2))   #Mean of G2
+C= (statistics.mean(G3))    #Mean of G3
+D=(statistics.mean(G1))     #Mean of G1
+Square_sumbetweengroups=0
+i=0
+while i<=2:
+    Square_sumbetweengroups += ((G1[i]-A)**2 + (G2[i]-A)**2 + (G3[i]-A)**2)
+    i+=1
+    if(i==3):
+        print(Square_sumbetweengroups)
+    Square_withingroups=0
+i=0
+while i<=2:
+    Square_withingroups+= (((G1[i]-D)**2) + ((G2[i]-B)**2) +((G3[i]-C)**2))
+    i+=1
+    if(i==3):
+      print(Square_withingroups)
+Df1=len(G1)-1
+print(Df1)
+# same for G2 and G3
+Df2= (len(G1)+len(G2)+len(G3))-len(G1)
+print(Df2)
+# we can take anything G2 or G3
+Mean_square1=Square_sumbetweengroups/Df1
+Mean_square2=Square_withingroups/Df2
+ANOVA=Mean_square1/Mean_square2
+print(ANOVA)
