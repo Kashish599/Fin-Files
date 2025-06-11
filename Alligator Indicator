@@ -1,0 +1,40 @@
+Alligator indicator
+
+import yfinance as yf
+import pandas as pd
+import matplotlib.pyplot as plt
+import mplfinance as mpf
+import datetime as dt
+import matplotlib.dates as mdates
+end_date=dt.datetime.now()
+start_date=end_date-dt.timedelta(days=int(input("Enter the no of days : ")))
+ticker=input("Enter the ticker symbol : ")
+data=yf.download(ticker,start_date,end_date)
+data.columns=data.columns.get_level_values(0)
+data.reset_index(inplace=True)
+Alligators_jaw=data["Close"].rolling(window=13).mean()
+Alligators_teeth=data["Close"].rolling(window=8).mean()
+Alligators_lips=data["Close"].rolling(window=5).mean()
+data["Alligators_jaw_MA"]=Alligators_jaw
+data["Alligators_teeth_MA"]=Alligators_teeth
+data["Alligators_lips_MA"]=Alligators_lips
+data.dropna(inplace=True)
+
+data.set_index(data["Date"],inplace=True)
+print(data)
+adplots= [
+mpf.make_addplot(data["Alligators_jaw_MA"],type="line",color="blue"),
+mpf.make_addplot(data["Alligators_teeth_MA"],type="line",color="red"),
+mpf.make_addplot(data["Alligators_lips_MA"],type="line",color="green")
+]     
+mpf.plot(data,addplot=adplots,type="candle")
+plt.savefig("alligator.png")
+plt.show()
+
+#Intrepretation of the indicator
+#If the Alligator is not asleep, the market is either in an uptrend or a downtrend.
+#If the price is above the Alligator's mouth then it's an uptrend. The indicator lines take a bullish order (green on the top, then red, then blue).
+#If the price is below the Alligator's mouth then it's a downtrend. The Alligator’s lines take a bearish order (blue on the top, then red, then green).
+#If Alligator is asleep
+#Market is not showing any movement any it is advised to stay out of the markets by Mr. Bill Williams.
+
