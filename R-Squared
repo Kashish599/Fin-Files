@@ -1,0 +1,27 @@
+a=float(input("Enter the intercept value : "))
+b=float(input("Enter the slope :"))
+x=[2,3,6,4]
+y=[2,4,7,6]
+
+SE_Line=0
+i=0
+while i<=3:
+    SE_Line+=(y[i]-(a+b*x[i]))**2 
+    i+=1
+    if(i==4):
+        print(SE_Line)
+
+Ymean=(y[0]+y[1]+y[2]+y[3])/4
+print(Ymean)
+
+SE_yaxis=0
+for i in y:
+    SE_yaxis+=(i-Ymean)**2
+    if(i==6):
+        print(SE_yaxis)
+
+Rsquare=(1-(SE_Line/SE_yaxis))*100
+print(Rsquare)
+
+#Rsquare percentage is the dependency of dependent variable on independent variable.
+
