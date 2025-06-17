@@ -2,53 +2,55 @@ import math
 import numpy as np
 import pandas as pd
 def probability(type,r,T,sigma,St,S0,K,N):
-    
-    if type=="Discrete_compounding":
-        
+    option_type=input("enter the option type : ")
+    if type=="Discrete_compounding":    
         if St<S0:
             d=St/S0
             u=1/d
         elif St>S0:
             u=St/S0
-            d=1/u
-        
+            d=1/u  
         pie=(((1+r)**(T/N))-d)/(u-d)
         pie_d=1-pie
         print(f" pie is  : {pie},pie_d is  : {pie_d}")
     elif type=="Continously_compounding":
-        u=math.exp(sigma*math.sqrt((T/N)))
-        
+        u=math.exp(sigma*math.sqrt((T/N))) 
         d=1/u
         pie=(math.exp(r*(T/N))-d)/(u-d)
         pie_d=1-pie
-        print(f" pie is  : {pie},pie_d is  : {pie_d}")
-        
-    option_type=input("enter the option type : ")
+        print(f" pie is  : {pie},pie_d is  : {pie_d}")    
         if N % 2==0:
            sum=0
            for i in range(N,-1,-2):
             if option_type=="call":
-             payoff_up=max((S0*(u)**i)-K,0) 
+             payoff_up=max((St*(u)**i)-K,0) 
             elif option_type=="put":
-             payoff_up=max(K-(S0*(u)**i),0)
+             payoff_up=max(K-(St*(u)**i),0)
 
             for a in range(0,(N-1)):
-              PV =(payoff_up*(pie**(N-a))*(pie**a))/((1+r)**N)  
-              series=np.array([PV])
-              sum+=series
-              if i==(N-N):
+              if type=="Discrete_compounding":
+               PV =(payoff_up*(pie**(N-a))*(pie**a))/((1+r)**N) 
+              elif type=="Continously_compounding" :
+               PV =(payoff_up*(pie**(N-a))*(pie**a))/math.exp(r*(T/N)) 
+               
+               series=np.array([PV])
+               sum+=series
+               if i==(N-N):
                  print(sum)
               break
            sum1=0
            for j in range(N,0,-2):
             if option_type=="call":
-             payoff_down=max((S0*(d)**j)-K,0)
+             payoff_down=max((St*(d)**j)-K,0)
             elif option_type=="put":
-             payoff_down=max(K-(S0*(u)**i),0)
+             payoff_down=max(K-(St*(u)**i),0)
 
                
             for b in range(0,(N-2)):
-              PV1=payoff_down*(pie**(N-b))*(pie**b)/((1+r)**N)  
+              if type=="Discrete_compounding":
+               PV1=payoff_down*(pie**(N-b))*(pie**b)/((1+r)**N)  
+              elif type=="Continously_compounding":
+                PV1=payoff_down*(pie**(N-b))*(pie**b)/math.exp(r*(T/N)) 
               series1=np.array([PV1])
               sum1+=series1
               if j ==2:
@@ -60,12 +62,16 @@ def probability(type,r,T,sigma,St,S0,K,N):
            sum=0
            for i in range(N,0,-2):
             if option_type=="call":
-                payoff_up=max((S0*(u)**i)-K,0) 
+                payoff_up=max((St*(u)**i)-K,0) 
             elif option_type=="put":
-                payoff_up=max(K-(S0*(u)**i),0)
+                payoff_up=max(K-(St*(u)**i),0)
 
             for a in range(0,(N-1)):
-               PV =(payoff_up*(pie**(N-a))*(pie**a))/((1+r)**N)
+             if type=="Discrete_compounding":
+               PV =(payoff_up*(pie**(N-a))*(pie**a))/((1+r)**N) 
+             elif type=="Continously_compounding" :
+               PV =(payoff_up*(pie**(N-a))*(pie**a))/math.exp(r*(T/N)) 
+               
                series=np.array([PV])
                sum+=series
                if i==(1):
@@ -74,17 +80,23 @@ def probability(type,r,T,sigma,St,S0,K,N):
            sum1=0
            for j in range(N,0,-2):
               if option_type=="call":
-               payoff_down=max((S0*(d)**j)-K,0)
+               payoff_down=max((St*(d)**j)-K,0)
               elif option_type=="put":
-               payoff_down=max(K-(S0*(u)**i),0)
+               payoff_down=max(K-(St*(u)**i),0)
 
 
               for b in range(0,(N-2)):
-               PV1=payoff_down*(pie**(N-b))*(pie**b)/((1+r)**N)  
-            
+               if type=="Discrete_compounding":
+                PV1=payoff_down*(pie**(N-b))*(pie**b)/((1+r)**N)  
+               elif type=="Continously_compounding":
+                PV1=payoff_down*(pie**(N-b))*(pie**b)/math.exp(r*(T/N)) 
                series1=np.array([PV1])
                sum1+=series1
                if j==(1):
                  print(sum1)
                  break
-probability("Continously_compounding",0.04,1,0.2,90,100,110,2)
+            
+    
+       
+            
+               
