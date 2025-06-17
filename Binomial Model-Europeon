@@ -23,14 +23,14 @@ def probability(type,r,T,sigma,St,S0,K,N):
         pie_d=1-pie
         print(f" pie is  : {pie},pie_d is  : {pie_d}")
         
-        option_type=input("enter the option type : ")
+    option_type=input("enter the option type : ")
         if N % 2==0:
            sum=0
            for i in range(N,-1,-2):
             if option_type=="call":
-             payoff_up=max((St*(u)**i)-K,0) 
+             payoff_up=max((S0*(u)**i)-K,0) 
             elif option_type=="put":
-             payoff_up=max(K-(St*(u)**i),0)
+             payoff_up=max(K-(S0*(u)**i),0)
 
             for a in range(0,(N-1)):
               PV =(payoff_up*(pie**(N-a))*(pie**a))/((1+r)**N)  
@@ -42,9 +42,9 @@ def probability(type,r,T,sigma,St,S0,K,N):
            sum1=0
            for j in range(N,0,-2):
             if option_type=="call":
-             payoff_down=max((St*(d)**j)-K,0)
+             payoff_down=max((S0*(d)**j)-K,0)
             elif option_type=="put":
-             payoff_down=max(K-(St*(u)**i),0)
+             payoff_down=max(K-(S0*(u)**i),0)
 
                
             for b in range(0,(N-2)):
@@ -60,9 +60,9 @@ def probability(type,r,T,sigma,St,S0,K,N):
            sum=0
            for i in range(N,0,-2):
             if option_type=="call":
-                payoff_up=max((St*(u)**i)-K,0) 
+                payoff_up=max((S0*(u)**i)-K,0) 
             elif option_type=="put":
-                payoff_up=max(K-(St*(u)**i),0)
+                payoff_up=max(K-(S0*(u)**i),0)
 
             for a in range(0,(N-1)):
                PV =(payoff_up*(pie**(N-a))*(pie**a))/((1+r)**N)
@@ -74,9 +74,9 @@ def probability(type,r,T,sigma,St,S0,K,N):
            sum1=0
            for j in range(N,0,-2):
               if option_type=="call":
-               payoff_down=max((St*(d)**j)-K,0)
+               payoff_down=max((S0*(d)**j)-K,0)
               elif option_type=="put":
-               payoff_down=max(K-(St*(u)**i),0)
+               payoff_down=max(K-(S0*(u)**i),0)
 
 
               for b in range(0,(N-2)):
