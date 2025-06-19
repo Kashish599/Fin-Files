@@ -1,0 +1,45 @@
+import numpy as np
+import pandas as pd
+import yfinance as yf
+import datetime as dt
+ticker=input("enter the symbol : ")
+exp_dates=yf.Ticker(ticker).options
+stock_price=yf.Ticker(ticker).history(period="1d")
+value=stock_price["Close"]
+i=int(input("enter the number : "))
+option_chain=yf.Ticker(ticker).option_chain(exp_dates[i])
+type=input("enter the type of option : ")
+if type=="call":
+    data=option_chain.calls
+    data.drop(["contractSymbol","bid","ask","openInterest","contractSize","currency","impliedVolatility","change","percentChange","volume"],inplace=True,axis=1)
+elif type=="put":
+    data=option_chain.puts
+    data.drop(["contractSymbol","bid","ask","openInterest","contractSize","currency","impliedVolatility","change","percentChange","volume"],inplace=True,axis=1)
+ITM=data[data["inTheMoney"]==True]
+OTM=data[data["inTheMoney"]==False]
+print(ITM)
+print(OTM)
+Buy= OTM.sample(n=2,ignore_index=True)
+Buy.drop(columns=["lastTradeDate","inTheMoney"],inplace=True,axis=1)
+Buy["todayprice"]=value.item()
+def payoff(row):
+    if type=="call":
+        res=max((row["todayprice"]-row["strike"]),0)-row["lastPrice"]
+        return res
+    elif type=="put":
+        res=max((row["strike"]-row["todayprice"]),0)-row["lastPrice"]
+        return res
+Buy["profit/loss"]=Buy.apply(payoff,axis=1)
+short= ITM.sample(n=1,ignore_index=True)
+short.drop(columns=["lastTradeDate","inTheMoney"],inplace=True,axis=1)
+short["todayprice"]=value.item()
+def payoff(row):
+    if type=="call":
+        res=max((row["todayprice"]-row["strike"]),0)-row["lastPrice"]
+        return res
+    elif type=="put":
+        res=max((row["strike"]-row["todayprice"]),0)-row["lastPrice"]
+        return res
+short["profit/loss"]=short.apply(payoff,axis=1)
+Totalbenefit_or_loss=sum(Buy["profit/loss"],short["profit/loss"])
+print(Totalbenefit_or_loss)
