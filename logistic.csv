@@ -1,0 +1,37 @@
+Disease,Age,Gender,Smoker status
+diseased,43,Male,Smoker
+not diseased,18,Male,Smoker
+diseased,22,Female,Non-smoker
+diseased,25,Male,Non-smoker
+not diseased,45,Female,Smoker
+not diseased,12,Male,Non-smoker
+diseased,23,Male,Smoker
+diseased,33,Male,Smoker
+not diseased,27,Male,Non-smoker
+not diseased,27,Female,Non-smoker
+diseased,48,Female,Smoker
+diseased,34,Female,Smoker
+diseased,32,Female,Smoker
+diseased,66,Male,Smoker
+not diseased,24,Male,Smoker
+diseased,34,Male,Non-smoker
+not diseased,27,Male,Non-smoker
+not diseased,34,Female,Smoker
+diseased,55,Male,Smoker
+diseased,65,Male,Smoker
+diseased,44,Male,Smoker
+diseased,88,Male,Non-smoker
+not diseased,33,Male,Non-smoker
+not diseased,43,Female,Non-smoker
+not diseased,32,Female,Smoker
+not diseased,66,Male,Smoker
+diseased,24,Male,Smoker
+not diseased,34,Male,Non-smoker
+diseased,27,Male,Non-smoker
+not diseased,34,Female,Non-smoker
+diseased,55,Female,Smoker
+diseased,65,Female,Smoker
+diseased,44,Male,Smoker
+diseased,88,Male,Non-smoker
+not diseased,33,Male,Non-smoker
+not diseased,43,Female,Non-smoker
