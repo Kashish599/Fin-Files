@@ -1,0 +1,55 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider,RadioButtons
+
+S=np.linspace(15000,30000,100)
+K=24500
+premium_call=31.1
+premium_put=112
+upper_breakeven=K+premium_call+premium_put
+lower_breakeven=K-premium_call-premium_put
+straddle=((np.maximum(S-K,0)-premium_call) + (np.maximum(K-S,0)-premium_put))
+fig,ax=plt.subplots(figsize=(12,7))
+plt.subplots_adjust(left=0.25,bottom=0.25)
+line,=ax.plot(S,(np.maximum(S-K,0)-premium_call+(np.maximum(K-S,0)-premium_put)))
+ax.set_xlabel("price")
+ax.set_ylabel("straddle")
+ax_slider=plt.axes([0.25,0.1,0.65,0.03])
+slider = Slider(
+        ax_slider,
+        'premium_call',  # Label for the slider
+        10,          # Minimum value (valmin)
+        100,         # Maximum value (valmax)
+        valinit=10, # Initial value (valinit)
+        valstep=2   # Optional: step value for discrete increments
+    )
+
+ax_slid1 = plt.axes([0.4, 0.05, 0.75, 0.03]) # [left, bottom, width, height]
+slid1 = Slider(
+        ax_slid1,
+        'premium_put',  # Label for the slider
+        112,          # Minimum value (valmin)
+        200,         # Maximum value (valmax)
+        valinit=112, # Initial value (valinit)
+        valstep=8  # Optional: step value for discrete increments
+    )
+ax_slid2 = plt.axes([0.1, 0.07, 0.75, 0.03]) # [left, bottom, width, height]
+slid2 = Slider(
+        ax_slid2,
+        'strike',  # Label for the slider
+        lower_breakeven,        # Minimum value (valmin)
+        upper_breakeven,       # Maximum value (valmax)
+        valinit=lower_breakeven, # Initial value (valinit)
+        valstep=10 # Optional: step value for discrete increments
+    )
+def update(val):
+    prem=slider.val
+    prem_put=slid1.val
+    strike=slid2.val
+    line.set_ydata((np.maximum(S-strike,0)-prem + np.maximum(strike-S,0)-prem_put))
+    fig.canvas.draw_idle()
+
+slider.on_changed(update)
+slid1.on_changed(update)
+slid2.on_changed(update)
+plt.show()
