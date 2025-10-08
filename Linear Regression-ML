@@ -1,0 +1,26 @@
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+import seaborn as sns # type: ignore
+import matplotlib.pyplot as plt # type: ignore
+housing=pd.read_csv("housing.csv")
+print(housing.head())
+print(housing.describe())
+#sns.pairplot(housing)
+#sns.displot(housing["Price"])
+#plt.show()
+x=housing[["Area Population"]]
+y=housing["Avg. Area Number of Rooms"]
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(x,y,test_size=0.33,random_state=42)
+#print(X_train)
+from sklearn.linear_model import LinearRegression
+lm=LinearRegression()
+lm.fit(X_train,y_train)
+print(lm.intercept_)
+print(lm.coef_)
+predictions=lm.predict(X_test)
+plt.scatter(y_test,predictions)
+sns.displot((y_test-predictions),bins=50)
+plt.show()
+from sklearn import metrics
+print(metrics.mean_absolute_error(y_test,predictions))
