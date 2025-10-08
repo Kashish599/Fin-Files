@@ -1,0 +1,31 @@
+import pandas as pd
+import yfinance as yf
+
+df=yf.download("^NSEI",start="2025-01-01",end="2025-08-01")
+df.reset_index(inplace=True)
+df.drop(columns=["High","Low","Open","Volume"],inplace=True)
+df.columns=df.columns.get_level_values(0)
+print(df)
+df1=yf.download("RELIANCE.NS",start="2025-01-01",end="2025-08-01")
+df1.reset_index(inplace=True)
+df1.drop(columns=["High","Low","Open","Volume"],inplace=True)
+df1.columns=df1.columns.get_level_values(0)
+print(df1)
+table=pd.DataFrame()
+table["nse"]=df["Close"]
+table["reliance"]=df1["Close"]
+print(table)
+y=table["nse"]
+x=table["reliance"]
+import statsmodels.api as sm
+model=sm.OLS(y,x)
+results=model.fit()
+residuals=results.resid
+import matplotlib.pyplot as plt
+from statsmodels.graphics.gofplots import qqplot
+fig=qqplot(residuals,line="45",fit=True)
+plt.show()
+    
+    
+
+
