@@ -1,0 +1,24 @@
+import pandas as pd
+import yfinance as yf
+import matplotlib.pyplot as plt
+from matplotlib.widgets import RadioButtons
+import numpy as np
+
+data=yf.download("AMZN",start="2025-01-01",end="2025-08-01")
+df=yf.download("AAPL",start="2025-01-01",end="2025-08-01")
+x=np.linspace(1200,3000,144)
+p=data["Close"]
+q=df["Close"]
+fig,ax=plt.subplots()
+plt.subplots_adjust(left=0.25,bottom=0.25)
+line,=ax.plot(x,p,lw=2)
+ax_rad=plt.axes([0.1,0.15,0.2,0.2])
+radio=RadioButtons(ax_rad,("nifty","apple"))
+def close_func(label):
+    price={"nifty":p,
+           "apple":q}
+    info=price[label]
+    line.set_ydata(info)
+    plt.draw()
+radio.on_clicked(close_func)
+plt.show()
