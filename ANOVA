@@ -31,3 +31,19 @@ Mean_square1=Square_sumbetweengroups/Df1
 Mean_square2=Square_withingroups/Df2
 ANOVA=Mean_square1/Mean_square2
 print(ANOVA)
+OR
+import yfinance as yf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from statsmodels.formula.api import ols
+
+ticker=["ASIANPAINT.NS","^NSEI"]
+data=yf.download(ticker,start="2023-01-01",end="2024-01-01")["Close"]
+data.columns=data.columns.get_level_values(0)
+df=data.rename(columns={"ASIANPAINT.NS":"Y","^NSEI":"X"})
+Y=df["Y"]
+X=df["X"]
+X=sm.add_constant(X)
+model=ols("Y~X",data=df).fit()
+anova_table=sm.stats.anova_lm(model)
+print(anova_table)
