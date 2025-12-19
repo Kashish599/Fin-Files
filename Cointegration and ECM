@@ -1,0 +1,46 @@
+import yfinance as yf
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import coint,adfuller
+name=input("enter the symbol : ")
+ticker=[name,"^NSEI"]
+data=yf.download(ticker,start="2023-01-01",end="2024-01-01")["Close"]
+data.columns=data.columns.get_level_values(0)
+df=data.rename(columns={name:"Y","^NSEI":"X"})
+for x in df:
+    result=adfuller(df[x])
+    p_value=result[1]
+    if p_value>0.05:
+     print("Data is not stationary")
+    else:
+     print("Data is stationary")
+cointegration_test=coint(df["X"],df["Y"])
+if cointegration_test[1]> 0.05:
+  print("We fail to reject null hypothesis and data is not cointegrated")
+else:
+  print("We reject null hypothesis and data is cointegrated")
+if cointegration_test[1]< 0.05:
+  Y=df["Y"]
+  X=df["X"]
+  X=sm.add_constant(X)
+  model=sm.OLS(Y,X).fit()
+  intercept=model.params[0]
+  slope=model.params[1]
+  df["New_Y"]=intercept+df["X"]*slope
+  df["errors"]=df["New_Y"]-df["Y"]
+  df["change_Y"]=df["Y"]-df["Y"].shift(1)
+  df["change_X"]=df["X"]-df["X"].shift(1)
+  df["lag_error"]=df["errors"].shift(1)
+  df.dropna(inplace=True)
+  x=df[["change_X","lag_error"]]
+  y=df["change_Y"]
+  x=sm.add_constant(x)
+  info=sm.OLS(y,x).fit()
+  print(info.summary())
+  df["newchange_Y"]=-0.4874+df["change_X"]*0.0469+df["lag_error"]*0.0329
+  df["final_y"]=df["Y"]+df["newchange_Y"]
+  print(df)
+  import seaborn as sns
+  import matplotlib.pyplot as plt
+  sns.lineplot(x="X",y="final_y",data=df)
+  plt.show()
